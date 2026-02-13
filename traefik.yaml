@@ -1,0 +1,27 @@
+api:
+  dashboard: true # Enable the dashboard (optional)
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "${EMAIL}"
+      storage: "/acme.json"
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  docker:
+    exposedByDefault: false # Security: Apps must explicitly ask to be routed
+    network: web-traffic    # Default network to communicate with apps
